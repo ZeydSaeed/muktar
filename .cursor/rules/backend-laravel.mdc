@@ -1,0 +1,49 @@
+---
+description: Backend Laravel layer rules (Controllers, Services, Models)
+globs: app/**/*.php,routes/**/*.php,database/**/*.php
+alwaysApply: false
+---
+
+# Backend Laravel Rules
+
+## File placement
+
+```
+app/
+  Http/Controllers/     → thin controllers
+  Http/Requests/          → validation + authorize
+  Services/               → business workflows
+  Actions/                → single commands
+  Repositories/           → complex queries (optional)
+  Models/                 → Eloquent only
+  Policies/               → authorization
+  Data/                   → DTOs (optional)
+```
+
+## Controller template
+
+```php
+public function store(StoreFamilyRequest $request, StoreFamilyAction $action): RedirectResponse
+{
+    $action->execute($request->validated());
+
+    return redirect()->route('families.index');
+}
+```
+
+## Model rules
+
+- Use `#[Fillable]`, typed `@property`, and `casts()` method.
+- Relations as typed methods; use scopes for repeated filters.
+- No `$request`, no `redirect()`, no `Inertia::`.
+
+## New feature checklist
+
+1. Migration + Model + Factory
+2. Form Request(s)
+3. Action or Service
+4. Controller method
+5. Route in `web.php`
+6. Inertia page (if UI)
+
+Register bindings in `AppServiceProvider` when using interfaces.

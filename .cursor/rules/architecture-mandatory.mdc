@@ -1,0 +1,44 @@
+---
+description: Mandatory layered MVC architecture for muktar (الاسكان العسكري)
+alwaysApply: true
+---
+
+# Architecture (Mandatory)
+
+Every change MUST follow layered MVC. Never skip layers or mix responsibilities.
+
+## Layer map
+
+| Layer | Backend | Frontend |
+|-------|---------|----------|
+| Route | `routes/*.php` | Inertia page name in route |
+| Controller | `app/Http/Controllers/` | — |
+| Request / Validation | `app/Http/Requests/` | Form validation + server rules |
+| Service / Action | `app/Services/` or `app/Actions/` | — |
+| Model | `app/Models/` | — |
+| View | `resources/js/pages/` | Page components only |
+| UI Component | — | `resources/js/components/` |
+| Shared logic | `app/Concerns/` | `resources/js/hooks/`, `resources/js/lib/` |
+
+## MVC flow (this project)
+
+```
+Route → Controller → (Request) → Service/Action → Model → Inertia::render(page)
+                                                              ↓
+                                                         Page (View) → Components
+```
+
+## Rules
+
+- Controllers: HTTP only — authorize, delegate, return response. Max ~15 lines per action.
+- Business logic: ONLY in Services or Actions, never in Controllers or Models.
+- Models: Eloquent relations, casts, scopes, fillable. No HTTP or UI logic.
+- Pages: compose UI; no direct DB or business rules.
+- One feature = one vertical slice across layers (route → controller → service → model → page).
+
+## Before merging
+
+- [ ] No business logic in Controller or Page
+- [ ] Validation in Form Request (backend) or dedicated validator
+- [ ] New domain logic has a Service/Action class
+- [ ] Brand colors rule still respected (`brand-colors.mdc`)

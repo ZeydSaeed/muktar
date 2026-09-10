@@ -1,0 +1,38 @@
+---
+description: Mandatory design patterns and when to use them
+alwaysApply: true
+---
+
+# Design Patterns (Mandatory)
+
+Use the right pattern for the job. Do not force patterns on trivial code.
+
+## Required patterns in this project
+
+| Pattern | Use when | Location |
+|---------|----------|----------|
+| **MVC** | Every HTTP feature | Route + Controller + Inertia Page |
+| **Form Request** | Any validated input | `Http/Requests/` |
+| **Action** | Single write operation (create, update, delete) | `Actions/` |
+| **Service** | Multi-step workflow or read orchestration | `Services/` |
+| **Repository** | Complex/reused queries (3+ call sites) | `Repositories/` + interface |
+| **DTO** | Structured data between layers | `Data/` or readonly PHP class |
+| **Factory** | Test data and seeders | `database/factories/` |
+| **Observer / Event** | Side effects after model change (audit, notify) | `Observers/`, `Events/` |
+| **Policy** | Authorization rules | `Policies/` |
+| **Presentational / Container** | Smart page vs dumb component | `pages/` vs `components/` |
+
+## Design principles
+
+- **Separation of Concerns**: Each file one job.
+- **KISS**: Simplest solution that meets requirements.
+- **YAGNI**: No speculative abstractions.
+- **Composition over inheritance**: Prefer traits/concerns and injection.
+- **Convention over configuration**: Follow Laravel + Inertia conventions first.
+
+## Anti-patterns (never use)
+
+- God Controller / God Model / God Component
+- Business logic in Blade, React page, or Migration
+- Direct `DB::` in Controller when Eloquent/Repository suffices
+- Copy-paste validation (backend + frontend must both validate, but rules defined once on server)

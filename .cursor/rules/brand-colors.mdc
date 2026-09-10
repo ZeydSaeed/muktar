@@ -1,0 +1,35 @@
+---
+description: Mandatory brand color palette for the muktar project
+alwaysApply: true
+---
+
+# Brand Colors (Mandatory)
+
+Use ONLY these four brand colors. Do not introduce other hex values for UI styling.
+
+| Name | Hex | Tailwind class |
+|------|-----|----------------|
+| Navy | `#0B1849` | `bg-brand-navy`, `text-brand-navy`, `border-brand-navy` |
+| Green | `#124D1C` | `bg-brand-green`, `text-brand-green`, `border-brand-green` |
+| Gold | `#E4B028` | `bg-brand-gold`, `text-brand-gold`, `border-brand-gold` |
+| Cream | `#EBEDE3` | `bg-brand-cream`, `text-brand-cream`, `border-brand-cream` |
+
+## Semantic tokens (preferred)
+
+Use theme tokens from `resources/css/app.css` instead of raw hex:
+
+- `bg-background` / `text-foreground` — cream background, navy text (light mode)
+- `bg-primary` / `text-primary-foreground` — navy buttons, cream text
+- `bg-secondary` / `text-secondary-foreground` — green elements
+- `bg-accent` / `text-accent-foreground` — gold highlights
+- `ring-ring` — gold focus rings
+
+## TypeScript
+
+Import from `@/lib/brand-colors` when a JS color value is required.
+
+## Rules
+
+- Never hardcode colors outside the palette (except `destructive` for errors).
+- Never use Tailwind default colors (`blue-500`, `gray-200`, etc.) for UI.
+- Prefer semantic classes (`bg-primary`) over brand classes (`bg-brand-navy`).

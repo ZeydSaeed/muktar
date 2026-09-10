@@ -1,0 +1,39 @@
+---
+description: Mandatory roles and responsibilities per layer
+alwaysApply: true
+---
+
+# Layer Roles (Mandatory)
+
+Each layer has ONE role. Do not let a layer act as another.
+
+## Backend roles
+
+| Role | Location | Allowed | Forbidden |
+|------|----------|---------|-----------|
+| Controller | `Http/Controllers` | Receive request, call service, return Inertia/JSON/redirect | Queries, validation rules, business rules |
+| Form Request | `Http/Requests` | Validation, authorization for input | DB access, business logic |
+| Service | `Services/` | Business rules, orchestration, transactions | HTTP, Inertia, Blade/JSX |
+| Action | `Actions/` | Single use-case command (create user, import family) | Multiple unrelated use cases |
+| Model | `Models/` | Persistence, relations, casts, scopes | HTTP, notifications, complex workflows |
+| Middleware | `Http/Middleware` | Cross-cutting HTTP concerns | Domain logic |
+| Provider | `Providers/` | Bind interfaces, boot config | Feature business logic |
+
+## Frontend roles
+
+| Role | Location | Allowed | Forbidden |
+|------|----------|---------|-----------|
+| Page | `pages/` | Layout, Head, page-level data display, Form submit | Reusable UI, complex logic |
+| Component | `components/` | Reusable UI, local UI state | API calls, business rules |
+| Hook | `hooks/` | Reusable state/effects (theme, mobile) | JSX markup |
+| Lib | `lib/` | Pure helpers, constants (`brand-colors`) | React components |
+| Type | `types/` | Shared TypeScript interfaces | Runtime logic |
+
+## Dependency direction (strict)
+
+```
+Pages → Components → Hooks → Lib
+Controllers → Services/Actions → Models
+```
+
+Upper layers depend on lower layers. Never reverse (Model must not call Controller).

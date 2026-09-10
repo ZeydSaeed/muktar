@@ -1,0 +1,46 @@
+---
+description: Frontend React/Inertia layer rules (Pages, Components, Hooks)
+globs: resources/js/**/*.{tsx,ts}
+alwaysApply: false
+---
+
+# Frontend React / Inertia Rules
+
+## File placement
+
+```
+resources/js/
+  pages/          → Inertia views (one per route)
+  components/     → reusable UI (ui/ for shadcn primitives)
+  hooks/          → reusable React logic
+  lib/            → pure TS helpers, brand-colors
+  types/          → shared interfaces
+  layouts/        → app shells
+```
+
+## Page rules
+
+- Export default page component; set `Page.layout` when needed.
+- Use Inertia `Form`, `Link`, `Head` — not raw `<form action>`.
+- Receive data via props from Controller only; no hidden business rules.
+- Arabic UI text; RTL via global `dir="rtl"` (except login override).
+
+## Component rules
+
+- Presentational: props in, JSX out.
+- Use semantic Tailwind tokens (`bg-primary`, `text-brand-navy`) per `brand-colors.mdc`.
+- Colocate small sub-components; extract when reused 2+ times.
+
+## Data flow
+
+```
+Controller → Inertia::render('page', props) → Page → Components
+```
+
+Never call Laravel routes logic from `lib/`; use Wayfinder routes (`@/routes`).
+
+## Naming
+
+- Pages: `dashboard.tsx`, `families/index.tsx`
+- Components: PascalCase file and export
+- Hooks: `use-*.tsx`

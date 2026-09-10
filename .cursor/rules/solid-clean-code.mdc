@@ -1,0 +1,47 @@
+---
+description: Mandatory SOLID principles and clean code standards
+alwaysApply: true
+---
+
+# SOLID & Clean Code (Mandatory)
+
+## SOLID
+
+- **S — Single Responsibility**: One class/function = one reason to change.
+- **O — Open/Closed**: Extend via new classes (Service, Action, Policy), not by editing working code.
+- **L — Liskov Substitution**: Implementations must honor interface contracts (e.g. `FamilyRepositoryInterface`).
+- **I — Interface Segregation**: Small focused interfaces; avoid fat service classes.
+- **D — Dependency Inversion**: Controllers depend on abstractions; bind in `AppServiceProvider`.
+
+## Clean code rules
+
+- Meaningful names in English for code; Arabic for user-facing strings only.
+- Functions ≤ 20 lines; classes ≤ 200 lines — split when larger.
+- No magic numbers/strings — use constants, enums, or config.
+- No commented-out code; no dead imports.
+- DRY: extract repeated logic to Service, Concern, Hook, or Lib.
+- Fail fast: validate early, throw domain exceptions with clear messages.
+- Prefer explicit over clever; readability over brevity.
+
+## Examples
+
+```php
+// ❌ BAD — logic in controller
+public function store(Request $request) {
+    Family::create($request->all());
+}
+
+// ✅ GOOD — delegate to action/service
+public function store(StoreFamilyRequest $request, StoreFamilyAction $action) {
+    $action->execute($request->validated());
+    return redirect()->route('families.index');
+}
+```
+
+```tsx
+// ❌ BAD — fetch inside leaf component
+function FamilyRow() { const [data, setData] = useState(); useEffect(() => fetch...); }
+
+// ✅ GOOD — data from page via props or Inertia shared props
+function FamilyRow({ family }: { family: Family }) { ... }
+```
