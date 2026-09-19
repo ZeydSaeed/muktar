@@ -10,7 +10,7 @@ export default function AppLogo() {
             <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-7 shrink-0 items-center justify-center rounded-md">
                 <AppLogoIcon className="text-brand-navy size-4 shrink-0" />
             </div>
-            <div className="grid min-w-0 flex-1 text-right text-xs group-data-[collapsible=icon]:hidden">
+            <div className="grid min-w-0 flex-1 text-right text-[13px] group-data-[collapsible=icon]:hidden">
                 <span className="truncate leading-tight font-semibold">
                     {name}
                 </span>

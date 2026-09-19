@@ -1,7 +1,8 @@
 import { Head } from '@inertiajs/react';
-import { FamiliesTable } from '@/components/families/families-table';
+import { FamilyDeletionTable } from '@/components/families/family-deletion-table';
+import { FamilyDeletionToolbar } from '@/components/families/family-deletion-toolbar';
+import { useSelectedIds } from '@/hooks/use-selected-ids';
 import type {
-    ChildrenModal,
     FamilyFilterOptions,
     FamilyTableFilters,
     PaginatedFamilies,
@@ -13,7 +14,6 @@ type Props = {
     filters?: FamilyTableFilters;
     filters_active?: boolean;
     filterOptions?: FamilyFilterOptions;
-    childrenModal?: ChildrenModal | null;
 };
 
 export default function FamiliesDeletion({
@@ -22,20 +22,26 @@ export default function FamiliesDeletion({
     filters,
     filters_active,
     filterOptions,
-    childrenModal = null,
 }: Props) {
+    const selection = useSelectedIds();
+
     return (
         <>
             <Head title="حذف عائلة" />
-            <div className="flex h-full flex-1 flex-col p-4">
-                <h1 className="mb-4 text-xl font-semibold">حذف عائلة</h1>
-                <FamiliesTable
+            <div className="flex h-full min-h-0 flex-1 flex-col gap-2 overflow-hidden p-4">
+                <FamilyDeletionToolbar
+                    selectedIds={selection.ids}
+                    onDeleted={selection.clear}
+                />
+                <FamilyDeletionTable
                     families={families}
                     search={search}
                     filters={filters}
                     filters_active={filters_active}
                     filterOptions={filterOptions}
-                    childrenModal={childrenModal}
+                    selectedIds={selection.ids}
+                    onToggle={selection.toggle}
+                    onTogglePage={selection.togglePage}
                 />
             </div>
         </>

@@ -19,6 +19,17 @@ class FamilyBackupService
     ) {}
 
     /**
+     * @return array{families_count: int, children_count: int, filename: string}
+     */
+    public function pageData(): array
+    {
+        return [
+            ...$this->stats(),
+            'filename' => $this->filename(),
+        ];
+    }
+
+    /**
      * @return array{families_count: int, children_count: int}
      */
     public function stats(): array
@@ -79,6 +90,7 @@ class FamilyBackupService
         return [
             'head_of_family_name' => $family->head_of_family_name,
             'spouse_name' => $family->spouse_name,
+            'spouse_profession' => $family->spouse_profession,
             'profession' => $family->profession,
             'mother_name' => $family->mother_name,
             'house_number' => $family->house_number,

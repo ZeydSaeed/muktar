@@ -21,7 +21,7 @@ export function FamilyRowActions({ familyId, familyName }: Props) {
                     <Button
                         size="icon"
                         variant="ghost"
-                        className="text-secondary hover:bg-secondary/15 size-8"
+                        className="text-secondary hover:bg-secondary/15 size-7"
                         asChild
                     >
                         <Link href="/families/create" aria-label="اضافة عائلة">
@@ -37,7 +37,7 @@ export function FamilyRowActions({ familyId, familyName }: Props) {
                     <Button
                         size="icon"
                         variant="ghost"
-                        className="text-primary hover:bg-primary/10 size-8"
+                        className="text-primary hover:bg-primary/10 size-7"
                         asChild
                     >
                         <Link

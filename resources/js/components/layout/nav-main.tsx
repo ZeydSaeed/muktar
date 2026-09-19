@@ -12,13 +12,13 @@ export function NavMain({ items }: { items: NavItem[] }) {
     const { isCurrentUrl } = useCurrentUrl();
 
     return (
-        <SidebarGroup className="px-2 py-0">
-            <SidebarMenu>
+        <SidebarGroup className="px-2 py-4">
+            <SidebarMenu className="gap-8">
                 {items.map((item) => (
                     <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton
                             asChild
-                            size="sm"
+                            size="default"
                             isActive={isCurrentUrl(item.href)}
                             tooltip={{ children: item.title }}
                         >

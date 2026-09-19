@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $head_of_family_name
  * @property string|null $spouse_name
+ * @property string|null $spouse_profession
  * @property string|null $profession
  * @property string|null $mother_name
  * @property int|null $house_number
@@ -54,6 +55,7 @@ use Illuminate\Support\Carbon;
 #[Fillable([
     'head_of_family_name',
     'spouse_name',
+    'spouse_profession',
     'profession',
     'mother_name',
     'house_number',

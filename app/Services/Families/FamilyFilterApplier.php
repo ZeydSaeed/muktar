@@ -4,7 +4,6 @@ namespace App\Services\Families;
 
 use App\Data\FamilyTableFilters;
 use App\Models\Family;
-use App\Support\FamilyFilterOperators;
 use App\Support\HouseNumberGroup;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -17,26 +16,10 @@ class FamilyFilterApplier
     {
         $this->equalString($query, 'profession', $filters->profession);
         $this->houseGroup($query, $filters->houseGroup);
+        $this->equalString($query, 'nearest_landmark', $filters->nearestLandmark);
         $this->birthYear($query, $filters->birthYear);
-        $this->compareInt($query, 'males_count', $filters->malesOp, $filters->malesCount);
-        $this->compareInt($query, 'females_count', $filters->femalesOp, $filters->femalesCount);
         $this->equalInt($query, 'ration_card_number', $filters->rationCardNumber);
         $this->equalInt($query, 'housing_card_number', $filters->housingCardNumber);
-        $this->equalString($query, 'nearest_landmark', $filters->nearestLandmark);
-        $this->dateRange(
-            $query,
-            'karbala_residence_date',
-            $filters->karbalaOp,
-            $filters->karbalaDate,
-            $filters->karbalaDateTo,
-        );
-        $this->dateRange(
-            $query,
-            'current_residence_date',
-            $filters->currentOp,
-            $filters->currentDate,
-            $filters->currentDateTo,
-        );
     }
 
     /**
@@ -72,8 +55,7 @@ class FamilyFilterApplier
             return;
         }
 
-        [$from, $to] = HouseNumberGroup::range($group);
-        $query->whereBetween('house_number', [$from, $to]);
+        $query->whereRaw(HouseNumberGroup::sqlExpression().' = ?', [$group]);
     }
 
     /**
@@ -86,46 +68,5 @@ class FamilyFilterApplier
         }
 
         $query->whereYear('birth_date', $year);
-    }
-
-    /**
-     * @param  Builder<Family>  $query
-     */
-    private function compareInt(Builder $query, string $column, ?string $op, ?int $value): void
-    {
-        if ($value === null || $op === null) {
-            return;
-        }
-
-        if ($op === FamilyFilterOperators::GREATER_THAN) {
-            $query->where($column, '>', $value);
-        }
-
-        if ($op === FamilyFilterOperators::LESS_THAN) {
-            $query->where($column, '<', $value);
-        }
-    }
-
-    /**
-     * @param  Builder<Family>  $query
-     */
-    private function dateRange(
-        Builder $query,
-        string $column,
-        ?string $op,
-        ?string $from,
-        ?string $to,
-    ): void {
-        if ($op === FamilyFilterOperators::BEFORE && $from !== null) {
-            $query->whereDate($column, '<', $from);
-        }
-
-        if ($op === FamilyFilterOperators::AFTER && $from !== null) {
-            $query->whereDate($column, '>', $from);
-        }
-
-        if ($op === FamilyFilterOperators::BETWEEN && $from !== null && $to !== null) {
-            $query->whereBetween($column, [$from, $to]);
-        }
     }
 }

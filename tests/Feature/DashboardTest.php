@@ -56,6 +56,22 @@ class DashboardTest extends TestCase
                 ->has('families.data', 5));
     }
 
+    public function test_dashboard_lists_families_alphabetically_by_head_name(): void
+    {
+        $user = User::factory()->create();
+        Family::factory()->create(['head_of_family_name' => 'يوسف كاظم']);
+        Family::factory()->create(['head_of_family_name' => 'أحمد علي']);
+        Family::factory()->create(['head_of_family_name' => 'حسن محمد']);
+
+        $this->actingAs($user)
+            ->get(route('dashboard'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('families.data.0.head_of_family_name', 'أحمد علي')
+                ->where('families.data.1.head_of_family_name', 'حسن محمد')
+                ->where('families.data.2.head_of_family_name', 'يوسف كاظم'));
+    }
+
     public function test_dashboard_searches_head_of_family_name(): void
     {
         $user = User::factory()->create();
@@ -77,64 +93,77 @@ class DashboardTest extends TestCase
         Family::factory()->create([
             'head_of_family_name' => 'علي',
             'profession' => 'موظف',
-            'house_number' => 1523,
+            'house_number' => 31798,
         ]);
         Family::factory()->create([
             'head_of_family_name' => 'حسن',
-            'profession' => 'معلم',
-            'house_number' => 1299,
+            'profession' => 'موظف',
+            'house_number' => 32700,
         ]);
 
         $this->actingAs($user)
-            ->get(route('dashboard', ['profession' => 'موظف', 'house_group' => 15]))
+            ->get(route('dashboard', ['profession' => 'موظف', 'house_group' => 31]))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->where('families.total', 1)
                 ->where('families.data.0.head_of_family_name', 'علي')
                 ->where('filters.profession', 'موظف')
-                ->where('filters.house_group', '15'));
+                ->where('filters.house_group', '31'));
     }
 
-    public function test_dashboard_filters_males_greater_than(): void
+    public function test_dashboard_filters_house_group_by_thousands_digits(): void
     {
         $user = User::factory()->create();
         Family::factory()->create([
-            'head_of_family_name' => 'كثير',
-            'males_count' => 5,
+            'head_of_family_name' => 'مطابق',
+            'house_number' => 31850,
         ]);
         Family::factory()->create([
-            'head_of_family_name' => 'قليل',
-            'males_count' => 2,
+            'head_of_family_name' => 'مطابق أطول',
+            'house_number' => 131200,
+        ]);
+        Family::factory()->create([
+            'head_of_family_name' => 'مختلف',
+            'house_number' => 32798,
         ]);
 
         $this->actingAs($user)
-            ->get(route('dashboard', ['males_op' => 'gt', 'males_count' => 3]))
+            ->get(route('dashboard', ['house_group' => 31]))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
-                ->where('families.total', 1)
-                ->where('families.data.0.head_of_family_name', 'كثير'));
+                ->where('families.total', 2)
+                ->where('filterOptions.house_groups.0.label', '31')
+                ->where('filterOptions.house_groups.1.label', '32'));
     }
 
-    public function test_dashboard_filters_karbala_date_before(): void
+    public function test_dashboard_filters_landmark_birth_year_and_cards(): void
     {
         $user = User::factory()->create();
         Family::factory()->create([
-            'head_of_family_name' => 'قديم',
-            'karbala_residence_date' => '2010-01-01',
+            'head_of_family_name' => 'مطابق',
+            'nearest_landmark' => 'جامع الحسين',
+            'birth_date' => '1975-06-01',
+            'ration_card_number' => 850010,
+            'housing_card_number' => 420010,
         ]);
         Family::factory()->create([
-            'head_of_family_name' => 'حديث',
-            'karbala_residence_date' => '2020-01-01',
+            'head_of_family_name' => 'مختلف',
+            'nearest_landmark' => 'سوق المحافظة',
+            'birth_date' => '1988-06-01',
+            'ration_card_number' => 850020,
+            'housing_card_number' => 420020,
         ]);
 
         $this->actingAs($user)
             ->get(route('dashboard', [
-                'karbala_op' => 'before',
-                'karbala_date' => '2015-01-01',
+                'nearest_landmark' => 'جامع الحسين',
+                'birth_year' => 1975,
+                'ration_card_number' => 850010,
+                'housing_card_number' => 420010,
             ]))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->where('families.total', 1)
-                ->where('families.data.0.head_of_family_name', 'قديم'));
+                ->where('families.data.0.head_of_family_name', 'مطابق'));
     }
 }

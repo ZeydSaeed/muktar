@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { FamilyFormDocument } from '@/components/families/family-form-document';
 import { FamilyFormFields } from '@/components/families/family-form-fields';
 import { FamilyFormToolbar } from '@/components/families/family-form-toolbar';
 
@@ -9,7 +10,7 @@ export default function CreateFamily() {
             <Form
                 action="/families"
                 method="post"
-                className="flex h-full flex-1 flex-col gap-4 overflow-y-auto p-4"
+                className="flex h-full min-h-0 flex-1 flex-col overflow-hidden"
             >
                 {({ processing, errors }) => (
                     <>
@@ -17,7 +18,12 @@ export default function CreateFamily() {
                             title="اضافة عائلة"
                             processing={processing}
                         />
-                        <FamilyFormFields errors={errors} />
+                        <FamilyFormDocument
+                            heading="استمارة إضافة عائلة"
+                            description="عبّئ الحقول حسب الأقسام ثم احفظ الاستمارة"
+                        >
+                            <FamilyFormFields errors={errors} />
+                        </FamilyFormDocument>
                     </>
                 )}
             </Form>

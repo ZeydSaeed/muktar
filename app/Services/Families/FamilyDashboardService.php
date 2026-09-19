@@ -19,8 +19,7 @@ class FamilyDashboardService
     public function paginateForTable(
         ?string $search = null,
         ?FamilyTableFilters $filters = null,
-    ): LengthAwarePaginator
-    {
+    ): LengthAwarePaginator {
         $perPage = max(1, (int) config('mukhtar.pagination.families_per_page'));
 
         return $this->families
@@ -39,7 +38,7 @@ class FamilyDashboardService
             'profession' => $family->profession,
             'house_number' => $family->house_number,
             'mobile_number' => $family->mobile_number,
-            'national_id_number' => $family->national_id_number,
+            'ration_card_number' => $family->ration_card_number,
             'birth_date' => $family->birth_date?->format('Y-m-d'),
             'children_count' => (int) $family->children_count,
         ];

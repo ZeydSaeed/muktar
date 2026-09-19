@@ -17,33 +17,19 @@ import { BookOpen, Users } from 'lucide-react';
 const emptyFilters = (): FamilyTableFilters => ({
     profession: '',
     house_group: '',
+    nearest_landmark: '',
     birth_year: '',
-    males_op: '',
-    males_count: '',
-    females_op: '',
-    females_count: '',
     ration_card_number: '',
     housing_card_number: '',
-    nearest_landmark: '',
-    karbala_op: '',
-    karbala_date: '',
-    karbala_date_to: '',
-    current_op: '',
-    current_date: '',
-    current_date_to: '',
 });
 
 const emptyOptions = (): FamilyFilterOptions => ({
     professions: [],
     house_groups: [],
+    nearest_landmarks: [],
     birth_years: [],
-    males_counts: [],
-    females_counts: [],
     ration_card_numbers: [],
     housing_card_numbers: [],
-    nearest_landmarks: [],
-    karbala_dates: [],
-    current_dates: [],
 });
 
 type Props = {
@@ -56,6 +42,9 @@ type Props = {
 };
 
 const emptyValue = '—';
+const headerClass =
+    'border-primary sticky top-0 border px-2 py-1.5 text-center font-semibold';
+const cellClass = 'border-primary border px-2 py-1';
 
 function display(value: string | number | null): string {
     if (value === null || value === '') {
@@ -92,38 +81,22 @@ export function FamiliesTable({
     const options = filterOptions ?? emptyOptions();
 
     return (
-        <div className="flex min-h-0 flex-1 flex-col gap-4">
-            <div className="flex min-h-0 flex-1 gap-2">
-                <div className="border-primary bg-card flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl border-2">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+            <div className="flex min-h-0 flex-1 gap-2 overflow-hidden">
+                <div className="border-primary bg-card flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border-2">
                     <FamiliesSearchBar search={search} />
-                <div className="overflow-x-auto">
-                    <table className="w-full min-w-[800px] border-collapse text-right text-sm">
+                <div className="min-h-0 flex-1 overflow-auto">
+                    <table className="w-full min-w-200 border-collapse text-right text-[13px]">
                         <thead className="bg-primary text-primary-foreground">
                             <tr>
-                                <th className="border-primary border px-3 py-3 font-semibold">
-                                    ت
-                                </th>
-                                <th className="border-primary border px-3 py-3 font-semibold">
-                                    اسم رب الاسرة
-                                </th>
-                                <th className="border-primary border px-3 py-3 font-semibold">
-                                    رقم الدار
-                                </th>
-                                <th className="border-primary border px-3 py-3 font-semibold">
-                                    رقم الموبايل
-                                </th>
-                                <th className="border-primary border px-3 py-3 font-semibold">
-                                    رقم البطاقة الوطنية
-                                </th>
-                                <th className="border-primary border px-3 py-3 text-center font-semibold">
-                                    الأولاد
-                                </th>
-                                <th className="border-primary border px-3 py-3 text-center font-semibold">
-                                    سجل العائلة
-                                </th>
-                                <th className="border-primary border px-3 py-3 text-center font-semibold">
-                                    إجراءات
-                                </th>
+                                <th className={headerClass}>ت</th>
+                                <th className={headerClass}>اسم رب الاسرة</th>
+                                <th className={headerClass}>رقم الدار</th>
+                                <th className={headerClass}>رقم الموبايل</th>
+                                <th className={headerClass}>البطاقة التموينية</th>
+                                <th className={headerClass}>الأولاد</th>
+                                <th className={headerClass}>سجل العائلة</th>
+                                <th className={headerClass}>إجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -131,7 +104,7 @@ export function FamiliesTable({
                                 <tr>
                                     <td
                                         colSpan={8}
-                                        className="border-primary text-muted-foreground border px-3 py-10 text-center"
+                                        className={`${cellClass} text-muted-foreground py-6 text-center`}
                                     >
                                             {search.trim() === '' && !filters_active
                                                 ? 'لا توجد عائلات مسجّلة بعد'
@@ -144,35 +117,33 @@ export function FamiliesTable({
                                         key={family.id}
                                         className="even:bg-muted/40"
                                     >
-                                        <td className="border-primary border px-3 py-3">
+                                        <td className={`${cellClass} text-center`}>
                                             {startingNumber + index}
                                         </td>
-                                        <td className="border-primary border px-3 py-3 font-medium">
+                                        <td className={`${cellClass} font-medium`}>
                                             <HighlightedName
                                                 name={family.head_of_family_name}
                                                 query={search}
                                             />
                                         </td>
-                                        <td className="border-primary border px-3 py-3">
+                                        <td className={`${cellClass} text-center`}>
                                             {display(family.house_number)}
                                         </td>
                                         <td
-                                            className="border-primary border px-3 py-3"
+                                            className={`${cellClass} text-center`}
                                             dir="ltr"
                                         >
                                             {display(family.mobile_number)}
                                         </td>
-                                        <td
-                                            className="border-primary border px-3 py-3"
-                                            dir="ltr"
-                                        >
-                                            {display(family.national_id_number)}
+                                        <td className={`${cellClass} text-center`}>
+                                            {display(family.ration_card_number)}
                                         </td>
-                                        <td className="border-primary border px-3 py-2 text-center">
+                                        <td className={`${cellClass} text-center`}>
                                             <Button
                                                 type="button"
                                                 size="sm"
                                                 variant="secondary"
+                                                className="h-7 px-2 text-[13px]"
                                                 onClick={() =>
                                                     openChildrenModal(family.id)
                                                 }
@@ -184,11 +155,12 @@ export function FamiliesTable({
                                                     : ''}
                                             </Button>
                                         </td>
-                                        <td className="border-primary border px-3 py-2 text-center">
+                                        <td className={`${cellClass} text-center`}>
                                             <Button
                                                 type="button"
                                                 size="sm"
                                                 asChild
+                                                className="h-7 px-2 text-[13px]"
                                             >
                                                 <Link
                                                     href={`/families/${family.id}/record`}
@@ -198,7 +170,7 @@ export function FamiliesTable({
                                                 </Link>
                                             </Button>
                                         </td>
-                                        <td className="border-primary border px-3 py-2">
+                                        <td className={`${cellClass} text-center`}>
                                             <FamilyRowActions
                                                 familyId={family.id}
                                                 familyName={
@@ -212,8 +184,8 @@ export function FamiliesTable({
                         </tbody>
                     </table>
                 </div>
-                <div className="flex flex-col items-center gap-2 border-t-2 border-primary px-3 py-3 sm:flex-row sm:justify-between">
-                    <p className="text-muted-foreground text-xs">
+                <div className="flex shrink-0 flex-col items-center gap-1 border-t-2 border-primary px-2 py-1 sm:flex-row sm:justify-between">
+                    <p className="text-muted-foreground text-[13px]">
                         {families.total > 0
                             ? `عرض ${families.from} إلى ${families.to} من أصل ${families.total}`
                             : 'لا توجد نتائج'}

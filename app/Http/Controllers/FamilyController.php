@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Families\DeleteFamiliesAction;
 use App\Actions\Families\DeleteFamilyAction;
 use App\Actions\Families\StoreFamilyAction;
 use App\Actions\Families\UpdateFamilyAction;
 use App\Http\Requests\Dashboard\DashboardRequest;
+use App\Http\Requests\Families\BulkDeleteFamiliesRequest;
 use App\Http\Requests\Families\StoreFamilyRequest;
 use App\Http\Requests\Families\UpdateFamilyRequest;
 use App\Models\Family;
@@ -89,6 +91,22 @@ class FamilyController extends Controller
         Inertia::flash('toast', [
             'type' => 'success',
             'message' => 'تم حذف العائلة بنجاح.',
+        ]);
+
+        return back();
+    }
+
+    public function bulkDestroy(
+        BulkDeleteFamiliesRequest $request,
+        DeleteFamiliesAction $action,
+    ): RedirectResponse {
+        $count = $action->execute($request->ids());
+
+        Inertia::flash('toast', [
+            'type' => 'success',
+            'message' => $count === 1
+                ? 'تم حذف العائلة بنجاح.'
+                : 'تم حذف العوائل المحددة بنجاح.',
         ]);
 
         return back();

@@ -1,33 +1,26 @@
 import { Head } from '@inertiajs/react';
-import { Download } from 'lucide-react';
+import { BackupSaveButton } from '@/components/data/backup-save-button';
 import { DataToolPanel } from '@/components/data/data-tool-panel';
-import { Button } from '@/components/ui/button';
 
 type Props = {
     families_count: number;
     children_count: number;
+    filename: string;
 };
 
 export default function BackupPage({
     families_count,
     children_count,
+    filename,
 }: Props) {
     return (
         <>
             <Head title="نسخ احتياطي" />
-            <DataToolPanel
-                title="نسخ احتياطي"
-                description="يحفظ ملف JSON يحتوي على جميع العوائل والأولاد لاسترداده لاحقاً."
-            >
+            <DataToolPanel title="نسخ احتياطي">
                 <p className="text-sm">
                     المسجّل حالياً: {families_count} عائلة و{children_count} ابناً.
                 </p>
-                <Button asChild>
-                    <a href="/data/backup/download">
-                        <Download className="size-4" />
-                        تنزيل النسخة الاحتياطية
-                    </a>
-                </Button>
+                <BackupSaveButton filename={filename} />
             </DataToolPanel>
         </>
     );

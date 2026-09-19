@@ -1,4 +1,4 @@
-import { Form } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { FamilyChildRow } from '@/types';
@@ -7,33 +7,66 @@ type Props = {
     familyId: number;
     items: FamilyChildRow[];
     onEdit: (child: FamilyChildRow) => void;
+    onDeleted: (childId: number) => void;
 };
 
 const emptyValue = '—';
+const cellClass = 'border-primary border px-2 py-2';
+const birthCellClass =
+    'border-primary border min-w-[11rem] px-3 py-2 text-center text-[15px] whitespace-nowrap';
 
-export function FamilyChildrenTable({ familyId, items, onEdit }: Props) {
+function deleteChild(
+    familyId: number,
+    child: FamilyChildRow,
+    onDeleted: (childId: number) => void,
+): void {
+    if (!window.confirm(`هل تريد حذف ${child.name}؟`)) {
+        return;
+    }
+
+    router.delete(`/families/${familyId}/children/${child.id}`, {
+        preserveScroll: true,
+        preserveState: true,
+        only: ['childrenModal', 'families'],
+        onSuccess: () => onDeleted(child.id),
+    });
+}
+
+export function FamilyChildrenTable({
+    familyId,
+    items,
+    onEdit,
+    onDeleted,
+}: Props) {
     return (
         <div className="border-primary overflow-hidden rounded-lg border-2">
-            <table className="w-full border-collapse text-right text-sm">
+            <table className="w-full border-collapse text-sm">
                 <thead className="bg-primary text-primary-foreground">
                     <tr>
-                        {[
-                            'ت',
-                            'اسم الابن',
-                            'التولد',
-                            'رقم هوية البطاقة الوطنية',
-                            'السجل',
-                            'الصحيفة',
-                            'المهنة',
-                            'إجراءات',
-                        ].map((title) => (
-                            <th
-                                key={title}
-                                className="border-primary border px-2 py-2 font-semibold"
-                            >
-                                {title}
-                            </th>
-                        ))}
+                        <th className={`${cellClass} text-center font-semibold`}>
+                            ت
+                        </th>
+                        <th className={`${cellClass} text-center font-semibold`}>
+                            اسم الابن
+                        </th>
+                        <th className={`${birthCellClass} font-semibold`}>
+                            التولد
+                        </th>
+                        <th className={`${cellClass} text-center font-semibold`}>
+                            رقم هوية البطاقة الوطنية
+                        </th>
+                        <th className={`${cellClass} text-center font-semibold`}>
+                            السجل
+                        </th>
+                        <th className={`${cellClass} text-center font-semibold`}>
+                            الصحيفة
+                        </th>
+                        <th className={`${cellClass} text-center font-semibold`}>
+                            المهنة
+                        </th>
+                        <th className={`${cellClass} text-center font-semibold`}>
+                            إجراءات
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,28 +82,24 @@ export function FamilyChildrenTable({ familyId, items, onEdit }: Props) {
                     ) : (
                         items.map((child, index) => (
                             <tr key={child.id}>
-                                <td className="border-primary border px-2 py-2">
-                                    {index + 1}
-                                </td>
-                                <td className="border-primary border px-2 py-2">
-                                    {child.name}
-                                </td>
-                                <td className="border-primary border px-2 py-2">
+                                <td className={cellClass}>{index + 1}</td>
+                                <td className={cellClass}>{child.name}</td>
+                                <td className={birthCellClass} dir="ltr">
                                     {child.birth_date ?? emptyValue}
                                 </td>
-                                <td className="border-primary border px-2 py-2">
+                                <td className={cellClass}>
                                     {child.national_id_number ?? emptyValue}
                                 </td>
-                                <td className="border-primary border px-2 py-2">
+                                <td className={cellClass}>
                                     {child.registry_number ?? emptyValue}
                                 </td>
-                                <td className="border-primary border px-2 py-2">
+                                <td className={cellClass}>
                                     {child.page_number ?? emptyValue}
                                 </td>
-                                <td className="border-primary border px-2 py-2">
+                                <td className={cellClass}>
                                     {child.profession ?? emptyValue}
                                 </td>
-                                <td className="border-primary border px-2 py-2">
+                                <td className={cellClass}>
                                     <div className="flex justify-center gap-1">
                                         <Button
                                             type="button"
@@ -82,33 +111,22 @@ export function FamilyChildrenTable({ familyId, items, onEdit }: Props) {
                                         >
                                             <Pencil className="size-4" />
                                         </Button>
-                                        <Form
-                                            action={`/families/${familyId}/children/${child.id}`}
-                                            method="delete"
-                                            options={{ preserveScroll: true }}
-                                            onSubmit={(event) => {
-                                                if (
-                                                    !window.confirm(
-                                                        `هل تريد حذف ${child.name}؟`,
-                                                    )
-                                                ) {
-                                                    event.preventDefault();
-                                                }
-                                            }}
+                                        <Button
+                                            type="button"
+                                            size="icon"
+                                            variant="ghost"
+                                            className="text-destructive size-8"
+                                            onClick={() =>
+                                                deleteChild(
+                                                    familyId,
+                                                    child,
+                                                    onDeleted,
+                                                )
+                                            }
+                                            aria-label="حذف"
                                         >
-                                            {({ processing }) => (
-                                                <Button
-                                                    type="submit"
-                                                    size="icon"
-                                                    variant="ghost"
-                                                    className="text-destructive size-8"
-                                                    disabled={processing}
-                                                    aria-label="حذف"
-                                                >
-                                                    <Trash2 className="size-4" />
-                                                </Button>
-                                            )}
-                                        </Form>
+                                            <Trash2 className="size-4" />
+                                        </Button>
                                     </div>
                                 </td>
                             </tr>

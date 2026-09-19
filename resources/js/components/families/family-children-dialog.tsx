@@ -1,4 +1,4 @@
-import { Form, router } from '@inertiajs/react';
+import { Form, router, usePage } from '@inertiajs/react';
 import { Plus, Save, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { FamilyChildField } from '@/components/families/family-child-field';
@@ -46,6 +46,15 @@ function draftFromChild(child: FamilyChildRow): Draft {
     };
 }
 
+function addChild(familyId: number, draft: Draft, onDone: () => void): void {
+    router.post(`/families/${familyId}/children`, draft, {
+        preserveScroll: true,
+        preserveState: true,
+        only: ['childrenModal', 'families'],
+        onSuccess: onDone,
+    });
+}
+
 function closeModal(): void {
     const url = new URL(window.location.href);
     url.searchParams.delete('family_children');
@@ -61,6 +70,7 @@ function closeModal(): void {
 }
 
 export function FamilyChildrenDialog({ childrenModal }: Props) {
+    const pageErrors = usePage().props.errors;
     const [editingId, setEditingId] = useState<number | null>(null);
     const [draft, setDraft] = useState<Draft>(emptyDraft);
 
@@ -95,8 +105,11 @@ export function FamilyChildrenDialog({ childrenModal }: Props) {
                             setDraft(emptyDraft());
                         }}
                     >
-                        {({ processing, errors }) => (
-                            <>
+                        {({ processing, errors }) => {
+                            const fieldErrors = { ...pageErrors, ...errors };
+
+                            return (
+                                <>
                                 <div className="flex items-start justify-between gap-3">
                                     <div>
                                         <DialogTitle>
@@ -111,10 +124,17 @@ export function FamilyChildrenDialog({ childrenModal }: Props) {
                                         <Button
                                             type="button"
                                             variant="secondary"
-                                            onClick={() => {
-                                                setEditingId(null);
-                                                setDraft(emptyDraft());
-                                            }}
+                                            disabled={processing}
+                                            onClick={() =>
+                                                addChild(
+                                                    childrenModal.family_id,
+                                                    draft,
+                                                    () => {
+                                                        setEditingId(null);
+                                                        setDraft(emptyDraft());
+                                                    },
+                                                )
+                                            }
                                         >
                                             <Plus className="size-4" />
                                             اضافة
@@ -147,7 +167,7 @@ export function FamilyChildrenDialog({ childrenModal }: Props) {
                                         name="name"
                                         value={draft.name}
                                         required
-                                        error={errors.name}
+                                        error={fieldErrors.name}
                                         onChange={(value) =>
                                             setDraft({ ...draft, name: value })
                                         }
@@ -157,7 +177,7 @@ export function FamilyChildrenDialog({ childrenModal }: Props) {
                                         name="birth_date"
                                         type="date"
                                         value={draft.birth_date}
-                                        error={errors.birth_date}
+                                        error={fieldErrors.birth_date}
                                         onChange={(value) =>
                                             setDraft({
                                                 ...draft,
@@ -169,7 +189,7 @@ export function FamilyChildrenDialog({ childrenModal }: Props) {
                                         label="رقم هوية البطاقة الوطنية"
                                         name="national_id_number"
                                         value={draft.national_id_number}
-                                        error={errors.national_id_number}
+                                        error={fieldErrors.national_id_number}
                                         onChange={(value) =>
                                             setDraft({
                                                 ...draft,
@@ -182,7 +202,7 @@ export function FamilyChildrenDialog({ childrenModal }: Props) {
                                         name="registry_number"
                                         type="number"
                                         value={draft.registry_number}
-                                        error={errors.registry_number}
+                                        error={fieldErrors.registry_number}
                                         onChange={(value) =>
                                             setDraft({
                                                 ...draft,
@@ -195,7 +215,7 @@ export function FamilyChildrenDialog({ childrenModal }: Props) {
                                         name="page_number"
                                         type="number"
                                         value={draft.page_number}
-                                        error={errors.page_number}
+                                        error={fieldErrors.page_number}
                                         onChange={(value) =>
                                             setDraft({
                                                 ...draft,
@@ -207,7 +227,7 @@ export function FamilyChildrenDialog({ childrenModal }: Props) {
                                         label="المهنة"
                                         name="profession"
                                         value={draft.profession}
-                                        error={errors.profession}
+                                        error={fieldErrors.profession}
                                         onChange={(value) =>
                                             setDraft({
                                                 ...draft,
@@ -217,7 +237,8 @@ export function FamilyChildrenDialog({ childrenModal }: Props) {
                                     />
                                 </div>
                             </>
-                        )}
+                            );
+                        }}
                     </Form>
 
                     <FamilyChildrenTable
@@ -226,6 +247,12 @@ export function FamilyChildrenDialog({ childrenModal }: Props) {
                         onEdit={(child) => {
                             setEditingId(child.id);
                             setDraft(draftFromChild(child));
+                        }}
+                        onDeleted={(childId) => {
+                            if (editingId === childId) {
+                                setEditingId(null);
+                                setDraft(emptyDraft());
+                            }
                         }}
                     />
                 </div>

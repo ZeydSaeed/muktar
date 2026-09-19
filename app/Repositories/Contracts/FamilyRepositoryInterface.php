@@ -35,6 +35,11 @@ interface FamilyRepositoryInterface
     public function delete(Family $family): void;
 
     /**
+     * @param  list<int>  $ids
+     */
+    public function deleteByIds(array $ids): int;
+
+    /**
      * @return Collection<int, Family>
      */
     public function allWithChildren(): Collection;

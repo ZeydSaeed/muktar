@@ -4,6 +4,7 @@ namespace App\Services\Families;
 
 use App\Models\Family;
 use App\Support\HouseNumberGroup;
+use Carbon\CarbonInterface;
 
 class FamilyFilterOptionsService
 {
@@ -15,14 +16,10 @@ class FamilyFilterOptionsService
         return [
             'professions' => $this->strings('profession'),
             'house_groups' => $this->houseGroups(),
+            'nearest_landmarks' => $this->strings('nearest_landmark'),
             'birth_years' => $this->years('birth_date'),
-            'males_counts' => $this->integers('males_count'),
-            'females_counts' => $this->integers('females_count'),
             'ration_card_numbers' => $this->integers('ration_card_number'),
             'housing_card_numbers' => $this->integers('housing_card_number'),
-            'nearest_landmarks' => $this->strings('nearest_landmark'),
-            'karbala_dates' => $this->dates('karbala_residence_date'),
-            'current_dates' => $this->dates('current_residence_date'),
         ];
     }
 
@@ -68,36 +65,13 @@ class FamilyFilterOptionsService
             ->map(function (Family $family) use ($column): ?int {
                 $date = $family->getAttribute($column);
 
-                return $date instanceof \Carbon\CarbonInterface ? $date->year : null;
+                return $date instanceof CarbonInterface ? $date->year : null;
             })
             ->filter()
             ->unique()
             ->sortDesc()
             ->values()
             ->map(fn (int $year): array => $this->option((string) $year))
-            ->all();
-    }
-
-    /**
-     * @return array<int, array{value: string, label: string}>
-     */
-    private function dates(string $column): array
-    {
-        return Family::query()
-            ->whereNotNull($column)
-            ->get([$column])
-            ->map(function (Family $family) use ($column): ?string {
-                $date = $family->getAttribute($column);
-
-                return $date instanceof \Carbon\CarbonInterface
-                    ? $date->format('Y-m-d')
-                    : null;
-            })
-            ->filter()
-            ->unique()
-            ->sort()
-            ->values()
-            ->map(fn (string $date): array => $this->option($date))
             ->all();
     }
 

@@ -27,8 +27,7 @@ export default function FamiliesIndex({
     return (
         <>
             <Head title="سجل العوائل" />
-            <div className="flex h-full flex-1 flex-col p-4">
-                <h1 className="mb-4 text-xl font-semibold">سجل العوائل</h1>
+            <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden p-4">
                 <FamiliesTable
                     families={families}
                     search={search}

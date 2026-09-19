@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Inertia\Testing\AssertableInertia as Assert;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Tests\TestCase;
 
@@ -63,6 +64,46 @@ class DataToolsTest extends TestCase
         ]);
     }
 
+    public function test_authenticated_user_can_view_backup_page(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->get(route('data.backup'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('data/backup')
+                ->has('filename'));
+    }
+
+    public function test_authenticated_user_can_save_backup_to_a_directory(): void
+    {
+        $user = User::factory()->create();
+        Family::factory()->create(['head_of_family_name' => 'كاظم جواد']);
+        $directory = sys_get_temp_dir().DIRECTORY_SEPARATOR.'muktar-backup-'.uniqid();
+        mkdir($directory);
+
+        $this->actingAs($user)
+            ->from(route('data.backup'))
+            ->post(route('data.backup.store'), ['directory' => $directory])
+            ->assertRedirect(route('data.backup'));
+
+        $files = glob($directory.DIRECTORY_SEPARATOR.'*.json');
+        $this->assertIsArray($files);
+        $this->assertCount(1, $files);
+        $payload = json_decode((string) file_get_contents($files[0]), true);
+        $this->assertSame('muktar.families.v1', $payload['schema']);
+    }
+
+    public function test_backup_save_rejects_missing_directory(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->from(route('data.backup'))
+            ->post(route('data.backup.store'), [
+                'directory' => sys_get_temp_dir().DIRECTORY_SEPARATOR.'missing-'.uniqid(),
+            ])
+            ->assertRedirect(route('data.backup'))
+            ->assertSessionHasErrors('directory');
+    }
+
     public function test_authenticated_user_can_download_and_restore_backup(): void
     {
         $user = User::factory()->create();
@@ -105,8 +146,8 @@ class DataToolsTest extends TestCase
         foreach ($headers as $index => $header) {
             $families->setCellValue([$index + 1, 1], $header);
         }
-        $families->setCellValue([1, 2], 'حسن علي');
-        $families->setCellValue([3, 2], 'موظف');
+        $this->setExcelValue($families, $headers, 'اسم رب الاسرة', 'حسن علي');
+        $this->setExcelValue($families, $headers, 'المهنة', 'موظف');
 
         $children = $spreadsheet->createSheet();
         $children->setTitle('الأولاد');
@@ -123,5 +164,20 @@ class DataToolsTest extends TestCase
         $spreadsheet->disconnectWorksheets();
 
         return $path;
+    }
+
+    /**
+     * @param  list<string>  $headers
+     */
+    private function setExcelValue(
+        Worksheet $sheet,
+        array $headers,
+        string $header,
+        string $value,
+    ): void {
+        $column = array_search($header, $headers, true);
+
+        $this->assertNotFalse($column);
+        $sheet->setCellValue([(int) $column + 1, 2], $value);
     }
 }

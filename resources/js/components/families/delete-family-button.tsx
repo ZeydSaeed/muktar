@@ -18,7 +18,10 @@ export function DeleteFamilyButton({ familyId, familyName }: Props) {
         <Form
             action={`/families/${familyId}`}
             method="delete"
-            options={{ preserveScroll: true }}
+            options={{
+                preserveScroll: true,
+                only: ['families', 'childrenModal', 'filterOptions'],
+            }}
             onSubmit={(event) => {
                 if (!window.confirm(`هل تريد حذف عائلة ${familyName}؟`)) {
                     event.preventDefault();
@@ -34,7 +37,7 @@ export function DeleteFamilyButton({ familyId, familyName }: Props) {
                             variant="ghost"
                             disabled={processing}
                             aria-label="حذف عائلة"
-                            className="text-destructive hover:bg-destructive/10 size-8"
+                            className="text-destructive hover:bg-destructive/10 size-7"
                         >
                             {processing ? (
                                 <Spinner />

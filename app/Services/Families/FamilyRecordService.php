@@ -24,6 +24,8 @@ class FamilyRecordService
             'head' => [
                 'full_name' => $family->head_of_family_name,
                 'mother_name' => $family->mother_name,
+                'spouse_name' => $family->spouse_name,
+                'spouse_profession' => $family->spouse_profession,
                 'birth_place' => $family->birth_place,
                 'birth_date' => $family->birth_date?->format('Y-m-d'),
                 'profession' => $family->profession,

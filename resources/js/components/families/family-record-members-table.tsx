@@ -1,8 +1,46 @@
 import type { FamilyChildRow } from '@/types';
 
 type Props = {
-    childrenRows: Array<FamilyChildRow | null>;
+    childrenRows: FamilyChildRow[];
 };
+
+const headers = [
+    'ت',
+    'الاسم',
+    'التولد',
+    'رقم هوية الأحوال المدنية',
+    'السجل',
+    'الصحيفة',
+    'المهنة',
+] as const;
+
+function display(value: string | number | null | undefined): string {
+    return value === null || value === undefined ? '' : String(value);
+}
+
+function memberValues(child: FamilyChildRow, index: number): Array<string | number> {
+    return [
+        index + 1,
+        child.name,
+        display(child.birth_date),
+        display(child.national_id_number),
+        display(child.registry_number),
+        display(child.page_number),
+        display(child.profession),
+    ];
+}
+
+function MemberRow({ child, index }: { child: FamilyChildRow; index: number }) {
+    return (
+        <tr>
+            {memberValues(child, index).map((value, cellIndex) => (
+                <td key={`${child.id}-${cellIndex}`} className="border-primary border px-2 py-2">
+                    {value}
+                </td>
+            ))}
+        </tr>
+    );
+}
 
 export function FamilyRecordMembersTable({ childrenRows }: Props) {
     return (
@@ -10,18 +48,10 @@ export function FamilyRecordMembersTable({ childrenRows }: Props) {
             <table className="w-full border-collapse text-right text-sm">
                 <thead className="bg-primary text-primary-foreground">
                     <tr>
-                        {[
-                            'ت',
-                            'الاسم',
-                            'التولد',
-                            'رقم هوية الأحوال المدنية',
-                            'السجل',
-                            'الصحيفة',
-                            'المهنة',
-                        ].map((title) => (
+                        {headers.map((title) => (
                             <th
                                 key={title}
-                                className="border-primary border px-2 py-2 font-semibold"
+                                className="border-primary border px-2 py-2 text-center font-semibold"
                             >
                                 {title}
                             </th>
@@ -30,29 +60,7 @@ export function FamilyRecordMembersTable({ childrenRows }: Props) {
                 </thead>
                 <tbody>
                     {childrenRows.map((child, index) => (
-                        <tr key={child?.id ?? `empty-${index}`}>
-                            <td className="border-primary border px-2 py-2">
-                                {index + 1}
-                            </td>
-                            <td className="border-primary border px-2 py-2">
-                                {child?.name ?? ''}
-                            </td>
-                            <td className="border-primary border px-2 py-2">
-                                {child?.birth_date ?? ''}
-                            </td>
-                            <td className="border-primary border px-2 py-2">
-                                {child?.national_id_number ?? ''}
-                            </td>
-                            <td className="border-primary border px-2 py-2">
-                                {child?.registry_number ?? ''}
-                            </td>
-                            <td className="border-primary border px-2 py-2">
-                                {child?.page_number ?? ''}
-                            </td>
-                            <td className="border-primary border px-2 py-2">
-                                {child?.profession ?? ''}
-                            </td>
-                        </tr>
+                        <MemberRow key={child.id} child={child} index={index} />
                     ))}
                 </tbody>
             </table>

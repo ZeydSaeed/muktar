@@ -12,20 +12,10 @@ export const FAMILY_TABLE_PARTIALS = [
 export const FAMILY_FILTER_KEYS = [
     'profession',
     'house_group',
+    'nearest_landmark',
     'birth_year',
-    'males_op',
-    'males_count',
-    'females_op',
-    'females_count',
     'ration_card_number',
     'housing_card_number',
-    'nearest_landmark',
-    'karbala_op',
-    'karbala_date',
-    'karbala_date_to',
-    'current_op',
-    'current_date',
-    'current_date_to',
 ] as const;
 
 export type FamilyFilterKey = (typeof FAMILY_FILTER_KEYS)[number];

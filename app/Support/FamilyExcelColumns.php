@@ -14,6 +14,7 @@ final class FamilyExcelColumns
             'اسم الزوجة او الزوج' => 'spouse_name',
             'المهنة' => 'profession',
             'اسم الام' => 'mother_name',
+            'مهنة الزوجة' => 'spouse_profession',
             'رقم الدار' => 'house_number',
             'رقم البطاقة التموينية' => 'ration_card_number',
             'رقم بطاقة السكن' => 'housing_card_number',

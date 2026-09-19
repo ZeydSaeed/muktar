@@ -31,8 +31,7 @@ class FamilyRepository implements FamilyRepositoryInterface
         int $perPage,
         ?string $search = null,
         ?FamilyTableFilters $filters = null,
-    ): LengthAwarePaginator
-    {
+    ): LengthAwarePaginator {
         $query = Family::query()
             ->select([
                 'id',
@@ -40,7 +39,7 @@ class FamilyRepository implements FamilyRepositoryInterface
                 'profession',
                 'house_number',
                 'mobile_number',
-                'national_id_number',
+                'ration_card_number',
                 'birth_date',
             ])
             ->withCount('children');
@@ -52,6 +51,7 @@ class FamilyRepository implements FamilyRepositoryInterface
         }
 
         return $query
+            ->orderBy('head_of_family_name')
             ->orderBy('id')
             ->paginate($perPage)
             ->withQueryString();
@@ -102,6 +102,18 @@ class FamilyRepository implements FamilyRepositoryInterface
     public function delete(Family $family): void
     {
         $family->delete();
+    }
+
+    /**
+     * @param  list<int>  $ids
+     */
+    public function deleteByIds(array $ids): int
+    {
+        if ($ids === []) {
+            return 0;
+        }
+
+        return Family::query()->whereIn('id', $ids)->delete();
     }
 
     /**

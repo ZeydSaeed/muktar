@@ -16,8 +16,8 @@ import { dashboard } from '@/routes';
 
 export function AppSidebar() {
     return (
-        <Sidebar collapsible="icon" variant="inset" side="right">
-            <SidebarHeader>
+        <Sidebar collapsible="icon" variant="inset" side="right" className="print:hidden">
+            <SidebarHeader className="pb-6">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="sm" asChild>
@@ -33,11 +33,11 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
+            <SidebarContent className="py-4">
                 <NavMain items={mainNavItems} />
             </SidebarContent>
 
-            <SidebarFooter>
+            <SidebarFooter className="pt-4">
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

@@ -17,6 +17,7 @@ class FamilyFactory extends Factory
             'profession' => fake()->optional()->jobTitle(),
             'house_number' => fake()->optional()->numberBetween(1, 999),
             'mobile_number' => fake()->optional()->numerify('07#########'),
+            'ration_card_number' => fake()->optional()->numberBetween(850000, 859999),
             'national_id_number' => fake()->optional()->numerify('############'),
             'birth_date' => fake()->optional()->date(),
         ];

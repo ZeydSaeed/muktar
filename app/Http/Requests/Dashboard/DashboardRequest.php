@@ -3,9 +3,8 @@
 namespace App\Http\Requests\Dashboard;
 
 use App\Data\FamilyTableFilters;
-use App\Support\FamilyFilterOperators;
+use App\Support\HouseNumberGroup;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class DashboardRequest extends FormRequest
 {
@@ -24,21 +23,17 @@ class DashboardRequest extends FormRequest
             'family_children' => ['sometimes', 'integer', 'min:1'],
             'search' => ['sometimes', 'nullable', 'string', 'max:255'],
             'profession' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'house_group' => ['sometimes', 'nullable', 'integer', 'min:0'],
+            'house_group' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                'min:0',
+                'max:'.(HouseNumberGroup::TWO_DIGIT_MODULUS - 1),
+            ],
+            'nearest_landmark' => ['sometimes', 'nullable', 'string', 'max:255'],
             'birth_year' => ['sometimes', 'nullable', 'integer', 'min:1900', 'max:2100'],
-            'males_op' => ['sometimes', 'nullable', Rule::in(FamilyFilterOperators::comparisons())],
-            'males_count' => ['sometimes', 'nullable', 'integer', 'min:0'],
-            'females_op' => ['sometimes', 'nullable', Rule::in(FamilyFilterOperators::comparisons())],
-            'females_count' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'ration_card_number' => ['sometimes', 'nullable', 'integer', 'min:0'],
             'housing_card_number' => ['sometimes', 'nullable', 'integer', 'min:0'],
-            'nearest_landmark' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'karbala_op' => ['sometimes', 'nullable', Rule::in(FamilyFilterOperators::dates())],
-            'karbala_date' => ['sometimes', 'nullable', 'date'],
-            'karbala_date_to' => ['sometimes', 'nullable', 'date'],
-            'current_op' => ['sometimes', 'nullable', Rule::in(FamilyFilterOperators::dates())],
-            'current_date' => ['sometimes', 'nullable', 'date'],
-            'current_date_to' => ['sometimes', 'nullable', 'date'],
         ];
     }
 
@@ -68,20 +63,10 @@ class DashboardRequest extends FormRequest
         return new FamilyTableFilters(
             profession: $this->optionalString('profession'),
             houseGroup: $this->optionalInt('house_group'),
+            nearestLandmark: $this->optionalString('nearest_landmark'),
             birthYear: $this->optionalInt('birth_year'),
-            malesOp: $this->optionalString('males_op'),
-            malesCount: $this->optionalInt('males_count'),
-            femalesOp: $this->optionalString('females_op'),
-            femalesCount: $this->optionalInt('females_count'),
             rationCardNumber: $this->optionalInt('ration_card_number'),
             housingCardNumber: $this->optionalInt('housing_card_number'),
-            nearestLandmark: $this->optionalString('nearest_landmark'),
-            karbalaOp: $this->optionalString('karbala_op'),
-            karbalaDate: $this->optionalString('karbala_date'),
-            karbalaDateTo: $this->optionalString('karbala_date_to'),
-            currentOp: $this->optionalString('current_op'),
-            currentDate: $this->optionalString('current_date'),
-            currentDateTo: $this->optionalString('current_date_to'),
         );
     }
 

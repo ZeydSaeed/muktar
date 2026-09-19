@@ -21,5 +21,7 @@ class DatabaseSeeder extends Seeder
             'name' => config('mukhtar.user.name'),
             'email' => config('mukhtar.user.email'),
         ]);
+
+        $this->call(FamilyDirectorySeeder::class);
     }
 }

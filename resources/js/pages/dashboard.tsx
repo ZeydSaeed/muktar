@@ -27,7 +27,7 @@ export default function Dashboard({
     return (
         <>
             <Head title="اللوحة الرئيسية" />
-            <div className="flex h-full flex-1 flex-col p-4">
+            <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden p-4">
                 <FamiliesTable
                     families={families}
                     search={search}

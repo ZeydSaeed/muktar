@@ -8,6 +8,8 @@ import type { FamilyChildRow } from '@/types';
 export type FamilyRecordHead = {
     full_name: string;
     mother_name: string | null;
+    spouse_name: string | null;
+    spouse_profession: string | null;
     birth_place: string | null;
     birth_date: string | null;
     profession: string | null;
@@ -55,15 +57,12 @@ function joinParts(...parts: Array<string | number | null | undefined>): string 
 
 export function FamilyRecordSheet({ record }: Props) {
     const { head, children } = record;
-    const rows = children.length >= 6 ? children : [
-        ...children,
-        ...Array.from({ length: 6 - children.length }, () => null),
-    ];
 
     return (
         <article
+            id="family-record-print"
             dir="rtl"
-            className="border-primary bg-card mx-auto w-full max-w-4xl space-y-4 rounded-xl border-2 p-5"
+            className="border-primary bg-card mx-auto w-full max-w-4xl space-y-4 rounded-xl border-2 p-5 print:max-w-none print:rounded-none print:border-0 print:p-0 print:shadow-none"
         >
             <header className="relative py-2 text-center">
                 <p className="text-muted-foreground absolute start-0 top-0 text-sm">
@@ -78,6 +77,14 @@ export function FamilyRecordSheet({ record }: Props) {
                     value={head.full_name}
                 />
                 <RecordLine label="اسم الأم الثلاثي" value={head.mother_name} />
+                <RecordLine
+                    label="اسم الزوجة الثلاثي"
+                    value={head.spouse_name}
+                />
+                <RecordLine
+                    label="مهنة الزوجة"
+                    value={head.spouse_profession}
+                />
                 <RecordLine
                     label="محل وتاريخ الولادة"
                     value={joinParts(head.birth_place, head.birth_date)}
@@ -185,7 +192,7 @@ export function FamilyRecordSheet({ record }: Props) {
                 <h2 className="text-center text-base font-bold">
                     أفراد العائلة
                 </h2>
-                <FamilyRecordMembersTable childrenRows={rows} />
+                <FamilyRecordMembersTable childrenRows={children} />
             </div>
         </article>
     );

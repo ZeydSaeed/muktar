@@ -23,9 +23,9 @@ export function FilterSelect({
     onChange,
 }: Props) {
     return (
-        <div className="grid min-w-0 gap-0.5">
+        <div className="grid min-w-0 gap-1.5">
             {label ? (
-                <label htmlFor={id} className="text-[10px] leading-tight font-semibold">
+                <label htmlFor={id} className="text-[13px] leading-tight font-semibold">
                     {label}
                 </label>
             ) : (
@@ -36,7 +36,7 @@ export function FilterSelect({
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
                 className={cn(
-                    'border-primary bg-card text-foreground h-7 w-full min-w-0 rounded border px-1 text-[11px]',
+                    'border-primary bg-card text-foreground h-7 w-full min-w-0 rounded border px-1 text-[13px]',
                     'focus-visible:ring-ring outline-none focus-visible:ring-1',
                 )}
             >

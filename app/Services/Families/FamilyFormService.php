@@ -15,6 +15,7 @@ class FamilyFormService
             'id' => $family->id,
             'head_of_family_name' => $family->head_of_family_name,
             'spouse_name' => $family->spouse_name,
+            'spouse_profession' => $family->spouse_profession,
             'profession' => $family->profession,
             'mother_name' => $family->mother_name,
             'house_number' => $family->house_number,

@@ -19,13 +19,13 @@ export function FamiliesSearchBar({ search }: Props) {
                     onChange={(event) => setValue(event.target.value)}
                     placeholder="ابحث عن اسم رب الاسرة"
                     aria-label="ابحث عن اسم رب الاسرة"
-                    className="text-foreground placeholder:text-muted-foreground h-11 min-w-0 flex-1 bg-transparent text-sm outline-none"
+                    className="text-foreground placeholder:text-muted-foreground h-8 min-w-0 flex-1 bg-transparent text-[13px] outline-none"
                 />
             </label>
             <Button
                 type="button"
                 variant="default"
-                className="border-primary h-11 rounded-none border-s-2 px-4"
+                className="border-primary h-8 rounded-none border-s-2 px-4"
                 onClick={clearSearch}
             >
                 <X className="size-4" />

@@ -12,6 +12,7 @@ final class FamilyRules
         return [
             'head_of_family_name' => ['required', 'string', 'max:255'],
             'spouse_name' => ['nullable', 'string', 'max:255'],
+            'spouse_profession' => ['nullable', 'string', 'max:255'],
             'profession' => ['nullable', 'string', 'max:255'],
             'mother_name' => ['nullable', 'string', 'max:255'],
             'house_number' => ['nullable', 'integer', 'min:0'],

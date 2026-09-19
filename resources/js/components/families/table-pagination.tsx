@@ -8,15 +8,28 @@ type Props = {
 };
 
 function labelFor(link: PaginationLink): string {
-    if (link.label.includes('Previous')) {
+    const raw = link.label
+        .replace('&laquo;', '')
+        .replace('&raquo;', '')
+        .trim();
+
+    if (
+        raw.includes('Previous') ||
+        raw.includes('pagination.previous') ||
+        raw === 'السابق'
+    ) {
         return 'السابق';
     }
 
-    if (link.label.includes('Next')) {
+    if (
+        raw.includes('Next') ||
+        raw.includes('pagination.next') ||
+        raw === 'التالي'
+    ) {
         return 'التالي';
     }
 
-    return link.label.replace('&laquo;', '').replace('&raquo;', '').trim();
+    return raw;
 }
 
 export function TablePagination({ links }: Props) {
@@ -40,7 +53,7 @@ export function TablePagination({ links }: Props) {
                             variant="outline"
                             size="sm"
                             disabled
-                            className="min-w-9"
+                            className="min-w-8 h-6 px-2 text-[13px]"
                         >
                             {label}
                         </Button>
@@ -53,7 +66,7 @@ export function TablePagination({ links }: Props) {
                         variant={link.active ? 'default' : 'outline'}
                         size="sm"
                         className={cn(
-                            'min-w-9',
+                            'min-w-8 h-6 px-2 text-[13px]',
                             link.active && 'pointer-events-none',
                         )}
                         asChild

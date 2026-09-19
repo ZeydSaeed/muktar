@@ -29,6 +29,7 @@ export function FamilyChildField({
                 type={type}
                 required={required}
                 value={value}
+                dir={type === 'date' ? 'ltr' : undefined}
                 onChange={(event) => onChange(event.target.value)}
             />
             {error ? <p className="text-destructive text-xs">{error}</p> : null}
