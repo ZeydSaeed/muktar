@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Settings\NeighborhoodSettingsService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -38,6 +39,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            'neighborhood' => app(NeighborhoodSettingsService::class)->current(),
             'auth' => [
                 'user' => $request->user(),
             ],

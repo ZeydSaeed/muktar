@@ -8,5 +8,7 @@ interface UserRepositoryInterface
 {
     public function findOrCreateMukhtar(): User;
 
+    public function updatePin(User $user, string $pin): void;
+
     public function delete(User $user): void;
 }

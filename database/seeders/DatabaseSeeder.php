@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => config('mukhtar.user.name'),
             'email' => config('mukhtar.user.email'),
+            'password' => config('mukhtar.user.pin'),
         ]);
 
         $this->call(FamilyDirectorySeeder::class);

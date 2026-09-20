@@ -4,6 +4,7 @@ import {
     BookUser,
     DatabaseBackup,
     FileSpreadsheet,
+    Home,
     PieChart,
     Trash2,
     UserPlus,
@@ -11,6 +12,11 @@ import {
 import type { NavItem } from '@/types';
 
 export const mainNavItems: NavItem[] = [
+    {
+        title: 'الصفحة الرئيسية',
+        href: '/dashboard',
+        icon: Home,
+    },
     {
         title: 'سجل العوائل',
         href: '/families',

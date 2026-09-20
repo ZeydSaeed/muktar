@@ -1,19 +1,30 @@
 import { Form, Head } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
+import { DistrictArchitectureSvg } from '@/components/district-architecture-svg';
+import InputError from '@/components/input-error';
 import AppLogoIcon from '@/components/layout/app-logo-icon';
+import PinInput from '@/components/pin-input';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 
-export default function Login() {
+type Props = {
+    pinLength: number;
+};
+
+export default function Login({ pinLength }: Props) {
     return (
         <>
             <Head title="دخول النظام" />
 
             <div
                 dir="rtl"
-                className="bg-brand-cream flex min-h-svh flex-col items-center justify-center px-6 py-12 sm:px-10"
+                className="relative flex min-h-svh items-center justify-start overflow-hidden px-6 py-12 sm:px-10"
             >
-                <div className="w-full max-w-md space-y-8">
+                <DistrictArchitectureSvg className="pointer-events-none absolute inset-0 size-full" />
+                <div className="bg-brand-navy/10 pointer-events-none absolute inset-0" />
+
+                <div className="border-brand-navy/15 bg-brand-cream/94 relative z-10 w-full max-w-md space-y-8 rounded-3xl border px-8 py-10 shadow-2xl backdrop-blur-sm">
                     <div className="space-y-3 text-center">
                         <div className="bg-brand-navy mx-auto flex size-16 items-center justify-center rounded-2xl shadow-lg">
                             <AppLogoIcon className="text-brand-gold size-9" />
@@ -24,49 +35,47 @@ export default function Login() {
                                 مرحباً، مختار المنطقة
                             </h1>
                             <p className="text-brand-navy/65 text-base leading-relaxed">
-                                اضغط للدخول إلى لوحة التحكم وإدارة السجل السكني
-                                لمنطقتك
+                                أدخل الرقم السري للدخول إلى لوحة التحكم
                             </p>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-3">
-                        {[
-                            { label: 'العائلات', value: 'سجل كامل' },
-                            { label: 'المنطقة', value: 'متابعة دقيقة' },
-                            { label: 'النظام', value: 'آمن وسريع' },
-                        ].map((item) => (
-                            <div
-                                key={item.label}
-                                className="border-brand-navy/10 rounded-xl border bg-white/60 px-3 py-4 text-center"
-                            >
-                                <p className="text-brand-navy text-sm font-semibold">
-                                    {item.label}
-                                </p>
-                                <p className="text-brand-green mt-1 text-xs">
-                                    {item.value}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
+                    <Form
+                        action="/enter"
+                        method="post"
+                        className="w-full space-y-5"
+                    >
+                        {({ processing, errors }) => (
+                            <>
+                                <div className="grid gap-2 text-right">
+                                    <Label htmlFor="pin">الرقم السري</Label>
+                                    <PinInput
+                                        id="pin"
+                                        name="pin"
+                                        length={pinLength}
+                                        autoComplete="current-password"
+                                        placeholder={`أدخل ${pinLength} أرقام`}
+                                        autoFocus
+                                    />
+                                    <InputError message={errors.pin} />
+                                </div>
 
-                    <Form action="/enter" method="post" className="w-full">
-                        {({ processing }) => (
-                            <Button
-                                type="submit"
-                                size="lg"
-                                disabled={processing}
-                                className="bg-brand-navy hover:bg-brand-navy/90 text-brand-cream h-14 w-full rounded-xl text-base font-semibold shadow-lg transition-all hover:shadow-xl"
-                            >
-                                {processing ? (
-                                    <Spinner />
-                                ) : (
-                                    <>
-                                        دخول النظام
-                                        <ArrowLeft className="size-5" />
-                                    </>
-                                )}
-                            </Button>
+                                <Button
+                                    type="submit"
+                                    size="lg"
+                                    disabled={processing}
+                                    className="bg-brand-navy hover:bg-brand-navy/90 text-brand-cream h-14 w-full rounded-xl text-base font-semibold shadow-lg transition-all hover:shadow-xl"
+                                >
+                                    {processing ? (
+                                        <Spinner />
+                                    ) : (
+                                        <>
+                                            دخول النظام
+                                            <ArrowLeft className="size-5" />
+                                        </>
+                                    )}
+                                </Button>
+                            </>
                         )}
                     </Form>
 

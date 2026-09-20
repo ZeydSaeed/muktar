@@ -1,22 +1,20 @@
-import { Breadcrumbs } from '@/components/layout/breadcrumbs';
+import { usePage } from '@inertiajs/react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 
 export function AppSidebarHeader({
-    breadcrumbs = [],
+    breadcrumbs: _breadcrumbs = [],
 }: {
     breadcrumbs?: BreadcrumbItemType[];
 }) {
-    if (breadcrumbs.length === 0) {
-        return null;
-    }
+    const { neighborhood } = usePage().props;
 
     return (
-        <header className="border-sidebar-border/50 flex h-16 shrink-0 items-center gap-2 border-b px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4">
-            <div className="flex items-center gap-2">
-                <SidebarTrigger className="-mr-1" />
-                <Breadcrumbs breadcrumbs={breadcrumbs} />
-            </div>
+        <header className="border-sidebar-border/50 relative flex h-12 shrink-0 items-center border-b px-4">
+            <SidebarTrigger className="relative z-10 -ms-1" />
+            <h1 className="pointer-events-none absolute inset-x-0 text-center text-sm font-semibold">
+                {neighborhood}
+            </h1>
         </header>
     );
 }

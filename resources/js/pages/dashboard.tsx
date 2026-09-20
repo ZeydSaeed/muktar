@@ -26,7 +26,7 @@ export default function Dashboard({
 }: Props) {
     return (
         <>
-            <Head title="اللوحة الرئيسية" />
+            <Head title="الصفحة الرئيسية" />
             <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden p-4">
                 <FamiliesTable
                     families={families}

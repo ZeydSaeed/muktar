@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
-Route::post('enter', [MukhtarLoginController::class, 'enter'])->name('enter');
+Route::post('enter', [MukhtarLoginController::class, 'enter'])
+    ->middleware('throttle:5,1')
+    ->name('enter');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');

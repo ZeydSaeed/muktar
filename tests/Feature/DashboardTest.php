@@ -27,6 +27,7 @@ class DashboardTest extends TestCase
         $response->assertOk();
         $response->assertInertia(fn (Assert $page) => $page
             ->component('dashboard')
+            ->where('neighborhood', 'حي الاسكان العسكري')
             ->has('families.data')
             ->where('families.total', 0));
     }

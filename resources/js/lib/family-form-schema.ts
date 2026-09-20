@@ -19,13 +19,14 @@ export const familyFormSections: FamilyFormSectionDef[] = [
         fields: [
             {
                 name: 'head_of_family_name',
-                label: 'اسم رب الاسرة',
+                label: 'اسم رب الاسرة الرباعي واللقب',
                 required: true,
+                span: 'wide',
             },
-            { name: 'mother_name', label: 'اسم الام' },
+            { name: 'mother_name', label: 'اسم الام الثلاثي' },
             { name: 'spouse_name', label: 'اسم الزوجة الثلاثي' },
             { name: 'spouse_profession', label: 'مهنة الزوجة' },
-            { name: 'profession', label: 'المهنة' },
+            { name: 'profession', label: 'مهنة رب الاسرة' },
             { name: 'birth_date', label: 'المواليد', type: 'date' },
             { name: 'birth_place', label: 'محل الولادة' },
         ],
