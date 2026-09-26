@@ -40,8 +40,8 @@ const emptyOptions = (): FamilyFilterOptions => ({
 });
 
 const headerClass =
-    'border-primary sticky top-0 border px-2 py-1.5 text-center font-semibold';
-const cellClass = 'border-primary border px-2 py-1';
+    'border-primary sticky top-0 border px-2 py-1.5 text-center align-middle font-semibold';
+const cellClass = 'border-primary border px-2 py-1 text-center align-middle';
 const headers = [
     'ت',
     'اسم رب الاسرة',
@@ -69,7 +69,7 @@ export function FamilyDeletionTable({
             <div className="border-primary bg-card flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border-2">
                 <FamiliesSearchBar search={search} />
                 <div className="min-h-0 flex-1 overflow-auto">
-                    <table className="w-full min-w-200 border-collapse text-right text-[13px]">
+                    <table className="w-full min-w-200 border-collapse text-center text-[13px]">
                         <thead className="bg-primary text-primary-foreground">
                             <tr>
                                 <th className={`${headerClass} w-10`}>

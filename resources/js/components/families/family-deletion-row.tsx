@@ -11,7 +11,7 @@ type Props = {
 };
 
 const emptyValue = '—';
-const cellClass = 'border-primary border px-2 py-1';
+const cellClass = 'border-primary border px-2 py-1 text-center align-middle';
 
 function display(value: string | number | null): string {
     if (value === null || value === '') {

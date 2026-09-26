@@ -3,13 +3,18 @@
 namespace App\Services\Data;
 
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
-use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ExcelSheetReader
 {
+    public function __construct(
+        private ExcelSpreadsheetLoader $loader,
+        private ExcelFamilyRowSeparator $separator,
+    ) {}
+
     /**
      * @param  array<string, string>  $headerMap
      * @return list<array{row: int, values: array<string, mixed>}>
@@ -19,8 +24,9 @@ class ExcelSheetReader
         string $sheetName,
         array $headerMap,
         bool $fallbackToFirst = false,
+        bool $keepEmpty = false,
     ): array {
-        $spreadsheet = IOFactory::load($path);
+        $spreadsheet = $this->loader->load($path, $sheetName);
         $sheet = $this->sheetByName($spreadsheet, $sheetName);
 
         if ($sheet === null && $fallbackToFirst && $spreadsheet->getSheetCount() > 0) {
@@ -33,7 +39,7 @@ class ExcelSheetReader
             return [];
         }
 
-        $rows = $this->rowsFromSheet($sheet, $headerMap);
+        $rows = $this->rowsFromSheet($sheet, $headerMap, $keepEmpty);
         $spreadsheet->disconnectWorksheets();
 
         return $rows;
@@ -52,8 +58,11 @@ class ExcelSheetReader
      * @param  array<string, string>  $headerMap
      * @return list<array{row: int, values: array<string, mixed>}>
      */
-    private function rowsFromSheet(Worksheet $sheet, array $headerMap): array
-    {
+    private function rowsFromSheet(
+        Worksheet $sheet,
+        array $headerMap,
+        bool $keepEmpty = false,
+    ): array {
         $headers = $this->headerKeys($sheet, $headerMap);
         $rows = [];
         $highest = $sheet->getHighestDataRow();
@@ -61,14 +70,14 @@ class ExcelSheetReader
         for ($row = 2; $row <= $highest; $row++) {
             $values = $this->rowValues($sheet, $row, $headers);
 
-            if ($this->isEmpty($values)) {
+            if ($this->isEmpty($values) && ! $keepEmpty) {
                 continue;
             }
 
             $rows[] = ['row' => $row, 'values' => $values];
         }
 
-        return $rows;
+        return $this->trimTrailingEmpty($rows);
     }
 
     /**
@@ -84,7 +93,7 @@ class ExcelSheetReader
             foreach ($row->getCellIterator('A', $highestColumn) as $cell) {
                 $label = trim((string) $cell->getValue());
                 $column = $cell->getColumn();
-                $index = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($column);
+                $index = Coordinate::columnIndexFromString($column);
 
                 if (isset($headerMap[$label])) {
                     $keys[$index] = $headerMap[$label];
@@ -104,7 +113,7 @@ class ExcelSheetReader
         $values = [];
 
         foreach ($headers as $columnIndex => $field) {
-            $column = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($columnIndex);
+            $column = Coordinate::stringFromColumnIndex($columnIndex);
             $cell = $sheet->getCell($column.$row);
             $values[$field] = $this->cellValue($cell);
         }
@@ -134,16 +143,23 @@ class ExcelSheetReader
     }
 
     /**
+     * @param  list<array{row: int, values: array<string, mixed>}>  $rows
+     * @return list<array{row: int, values: array<string, mixed>}>
+     */
+    private function trimTrailingEmpty(array $rows): array
+    {
+        while ($rows !== [] && $this->isEmpty($rows[array_key_last($rows)]['values'])) {
+            array_pop($rows);
+        }
+
+        return $rows;
+    }
+
+    /**
      * @param  array<string, mixed>  $values
      */
     private function isEmpty(array $values): bool
     {
-        foreach ($values as $value) {
-            if ($value !== null && $value !== '') {
-                return false;
-            }
-        }
-
-        return true;
+        return $this->separator->matches($values);
     }
 }

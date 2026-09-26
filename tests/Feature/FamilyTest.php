@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Family;
 use App\Models\FamilyChild;
 use App\Models\User;
+use App\Services\Settings\NeighborhoodSettingsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -128,6 +129,42 @@ class FamilyTest extends TestCase
                 ->where('record.head.mother_name', 'فاطمة محمد')
                 ->where('record.head.spouse_name', 'زينب حسن علي')
                 ->where('record.head.spouse_profession', 'معلمة')
-                ->where('record.title', 'سجل عوائل حي الإسكان العسكري'));
+                ->where('record.title', 'سجل عوائل حي الاسكان العسكري')
+                ->where('record.head.current_neighborhood', 'حي الاسكان العسكري')
+                ->where('record.children', []));
+    }
+
+    public function test_family_record_uses_the_saved_neighborhood_name(): void
+    {
+        $user = User::factory()->create();
+        $family = Family::factory()->create([
+            'current_neighborhood' => null,
+        ]);
+
+        app(NeighborhoodSettingsService::class)->update('حي العباس');
+
+        $this->actingAs($user)
+            ->get(route('families.record', $family))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('record.title', 'سجل عوائل حي العباس')
+                ->where('record.head.current_neighborhood', 'حي العباس'));
+    }
+
+    public function test_family_record_keeps_the_family_neighborhood_when_present(): void
+    {
+        $user = User::factory()->create();
+        $family = Family::factory()->create([
+            'current_neighborhood' => 'محلة العسكر',
+        ]);
+
+        app(NeighborhoodSettingsService::class)->update('حي العباس');
+
+        $this->actingAs($user)
+            ->get(route('families.record', $family))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('record.title', 'سجل عوائل حي العباس')
+                ->where('record.head.current_neighborhood', 'محلة العسكر'));
     }
 }

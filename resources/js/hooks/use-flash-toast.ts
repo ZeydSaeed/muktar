@@ -13,7 +13,14 @@ export function useFlashToast(): void {
                 return;
             }
 
-            toast[data.type](data.message);
+            const show = toast[data.type];
+
+            if (typeof show === 'function') {
+                show(data.message);
+                return;
+            }
+
+            toast.message(data.message);
         });
     }, []);
 }

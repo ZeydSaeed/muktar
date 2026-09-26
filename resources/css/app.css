@@ -189,6 +189,42 @@
     }
 }
 
+table th,
+table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.excel-import-scroll {
+    overflow: scroll;
+    scrollbar-width: auto;
+    scrollbar-color: var(--brand-navy) var(--brand-cream);
+    -ms-overflow-style: scrollbar;
+}
+
+.excel-import-scroll::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+.excel-import-scroll::-webkit-scrollbar-track {
+    background: var(--brand-cream);
+}
+
+.excel-import-scroll::-webkit-scrollbar-thumb {
+    background: var(--brand-navy);
+    border: 2px solid var(--brand-cream);
+    border-radius: 6px;
+}
+
+.excel-import-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-green);
+}
+
+.excel-import-scroll::-webkit-scrollbar-corner {
+    background: var(--brand-cream);
+}
+
 @media print {
     @page {
         size: A4 portrait;

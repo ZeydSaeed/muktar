@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Data;
 use App\Actions\Data\ImportFamiliesFromExcelAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Data\ImportExcelRequest;
+use App\Services\Data\ExcelImportGuideService;
 use App\Services\Data\ExcelTemplateService;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -13,9 +14,9 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExcelImportController extends Controller
 {
-    public function show(): Response
+    public function show(ExcelImportGuideService $guide): Response
     {
-        return Inertia::render('data/excel-import');
+        return Inertia::render('data/excel-import', $guide->pageProps());
     }
 
     public function template(ExcelTemplateService $templates): StreamedResponse

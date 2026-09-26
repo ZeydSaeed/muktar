@@ -1,24 +1,31 @@
 import { Form, Head } from '@inertiajs/react';
 import { Download, Upload } from 'lucide-react';
+import { ExcelImportGuide } from '@/components/data/excel-import-guide';
 import { DataToolPanel } from '@/components/data/data-tool-panel';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
+import type { ExcelImportSheetGuide } from '@/types/data';
 
-export default function ExcelImportPage() {
+type Props = {
+    guide: ExcelImportSheetGuide;
+};
+
+export default function ExcelImportPage({ guide }: Props) {
     return (
         <>
-            <Head title="استيراد من اكسل" />
+            <Head title="استيراد العوائل من اكسل" />
             <DataToolPanel
-                title="استيراد من اكسل"
-                description="حمّل قالب الإكسل ثم املأ ورقة العوائل وورقة الأولاد. يُربط الابن برب أسرته عبر اسم رب الأسرة."
+                title="استيراد العوائل من اكسل"
+                description="ملف إكسل واحد. اسم الأرملة أو الزوج (إذا توفيت الزوجة) يُكتب في «اسم رب الاسرة»، والحالة في «اسم الزوجة او الزوج»، ثم الأبناء حتى الصف الفارغ."
+                preamble={<ExcelImportGuide guide={guide} />}
             >
                 <Button variant="secondary" asChild>
                     <a href="/data/excel-import/template">
                         <Download className="size-4" />
-                        تحميل القالب
+                        تحميل القالب المرجعي
                     </a>
                 </Button>
 

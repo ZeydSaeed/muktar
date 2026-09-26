@@ -24,10 +24,14 @@ readonly class ExcelImportResult
 
     public function toastMessage(): string
     {
+        if ($this->families === 0 && $this->children === 0) {
+            return $this->errors[0] ?? 'تعذر استيراد الملف. راجع صف العناوين وترتيب صفوف العائلة.';
+        }
+
         $message = "تم استيراد {$this->families} عائلة و{$this->children} ابناً.";
 
         if ($this->errors !== []) {
-            $message .= ' بعض الصفوف لم تُستورد: '.implode(' ', array_slice($this->errors, 0, 5));
+            $message .= ' لم تُستورد بعض الصفوف: '.implode(' ', array_slice($this->errors, 0, 5));
         }
 
         return $message;

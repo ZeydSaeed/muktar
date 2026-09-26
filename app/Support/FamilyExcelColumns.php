@@ -52,6 +52,28 @@ final class FamilyExcelColumns
     /**
      * @return array<string, string>
      */
+    public static function importHeaders(): array
+    {
+        return self::familyHeaders() + self::headerAliases();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private static function headerAliases(): array
+    {
+        return [
+            'اسم رب الاسرة الرباعي واللقب' => 'head_of_family_name',
+            'اسم الزوجة' => 'spouse_name',
+            'رقم البطاقة الوطنية اوالجنسية' => 'national_id_number',
+            'اقرب نقطه داله' => 'nearest_landmark',
+            'الملاحضات' => 'notes',
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
     public static function childHeaders(): array
     {
         return [

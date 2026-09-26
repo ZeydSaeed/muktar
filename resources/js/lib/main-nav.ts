@@ -33,7 +33,7 @@ export const mainNavItems: NavItem[] = [
         icon: Trash2,
     },
     {
-        title: 'استيراد من اكسل',
+        title: 'استيراد العوائل من اكسل',
         href: '/data/excel-import',
         icon: FileSpreadsheet,
     },
@@ -43,7 +43,7 @@ export const mainNavItems: NavItem[] = [
         icon: DatabaseBackup,
     },
     {
-        title: 'استرداد البيانات',
+        title: 'استيراد النسخ الاحتياطي',
         href: '/data/restore',
         icon: ArchiveRestore,
     },

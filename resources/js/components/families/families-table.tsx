@@ -43,8 +43,8 @@ type Props = {
 
 const emptyValue = '—';
 const headerClass =
-    'border-primary sticky top-0 border px-2 py-1.5 text-center font-semibold';
-const cellClass = 'border-primary border px-2 py-1';
+    'border-primary sticky top-0 border px-2 py-1.5 text-center align-middle font-semibold';
+const cellClass = 'border-primary border px-2 py-1 text-center align-middle';
 
 function display(value: string | number | null): string {
     if (value === null || value === '') {
@@ -86,7 +86,7 @@ export function FamiliesTable({
                 <div className="border-primary bg-card flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl border-2">
                     <FamiliesSearchBar search={search} />
                 <div className="min-h-0 flex-1 overflow-auto">
-                    <table className="w-full min-w-200 border-collapse text-right text-[13px]">
+                    <table className="w-full min-w-200 border-collapse text-center text-[13px]">
                         <thead className="bg-primary text-primary-foreground">
                             <tr>
                                 <th className={headerClass}>ت</th>
@@ -149,10 +149,7 @@ export function FamiliesTable({
                                                 }
                                             >
                                                 <Users className="size-4" />
-                                                الأولاد
-                                                {family.children_count > 0
-                                                    ? ` (${family.children_count})`
-                                                    : ''}
+                                                الأولاد ({family.children_count})
                                             </Button>
                                         </td>
                                         <td className={`${cellClass} text-center`}>

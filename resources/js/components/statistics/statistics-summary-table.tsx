@@ -24,13 +24,13 @@ type Props = {
 
 export function StatisticsSummaryTable({ summary }: Props) {
     return (
-        <table className="w-full border-collapse text-sm">
+        <table className="w-full border-collapse text-center text-sm">
             <thead className="bg-primary text-primary-foreground">
                 <tr>
-                    <th className="border-primary border px-3 py-2 text-center font-semibold">
+                    <th className="border-primary border px-3 py-2 text-center align-middle font-semibold">
                         البيان
                     </th>
-                    <th className="border-primary w-32 border px-3 py-2 text-center font-semibold">
+                    <th className="border-primary w-32 border px-3 py-2 text-center align-middle font-semibold">
                         العدد
                     </th>
                 </tr>
@@ -38,10 +38,10 @@ export function StatisticsSummaryTable({ summary }: Props) {
             <tbody>
                 {summaryItems.map((item) => (
                     <tr key={item.key} className="even:bg-muted/40">
-                        <td className="border-primary border px-3 py-1.5">
+                        <td className="border-primary border px-3 py-1.5 text-center align-middle">
                             {item.label}
                         </td>
-                        <td className="border-primary border px-3 py-1.5 text-center font-medium">
+                        <td className="border-primary border px-3 py-1.5 text-center align-middle font-medium">
                             {summary[item.key]}
                         </td>
                     </tr>

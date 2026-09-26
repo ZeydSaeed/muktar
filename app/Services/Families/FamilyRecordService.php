@@ -5,11 +5,13 @@ namespace App\Services\Families;
 use App\Models\Family;
 use App\Models\FamilyChild;
 use App\Repositories\Contracts\FamilyChildRepositoryInterface;
+use App\Services\Settings\NeighborhoodSettingsService;
 
 class FamilyRecordService
 {
     public function __construct(
         private FamilyChildRepositoryInterface $children,
+        private NeighborhoodSettingsService $neighborhoods,
     ) {}
 
     /**
@@ -17,9 +19,11 @@ class FamilyRecordService
      */
     public function toView(Family $family): array
     {
+        $neighborhood = $this->neighborhoods->current();
+
         return [
             'id' => $family->id,
-            'title' => 'سجل عوائل حي الإسكان العسكري',
+            'title' => 'سجل عوائل '.$neighborhood,
             'date' => $family->created_at?->format('d / m / Y'),
             'head' => [
                 'full_name' => $family->head_of_family_name,
@@ -37,7 +41,7 @@ class FamilyRecordService
                 'current_governorate' => $family->current_governorate,
                 'current_district' => $family->current_district,
                 'current_subdistrict' => $family->current_subdistrict,
-                'current_neighborhood' => $family->current_neighborhood,
+                'current_neighborhood' => $family->current_neighborhood ?: $neighborhood,
                 'current_alley' => $family->current_alley,
                 'house_number' => $family->house_number,
                 'nearest_landmark' => $family->nearest_landmark,

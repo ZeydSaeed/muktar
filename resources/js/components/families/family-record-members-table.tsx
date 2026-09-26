@@ -34,7 +34,7 @@ function MemberRow({ child, index }: { child: FamilyChildRow; index: number }) {
     return (
         <tr>
             {memberValues(child, index).map((value, cellIndex) => (
-                <td key={`${child.id}-${cellIndex}`} className="border-primary border px-2 py-2">
+                <td key={`${child.id}-${cellIndex}`} className="border-primary border px-2 py-2 text-center align-middle">
                     {value}
                 </td>
             ))}
@@ -43,9 +43,15 @@ function MemberRow({ child, index }: { child: FamilyChildRow; index: number }) {
 }
 
 export function FamilyRecordMembersTable({ childrenRows }: Props) {
+    if (childrenRows.length === 0) {
+        return (
+            <p className="text-center text-sm font-medium">لا يوجد اولاد</p>
+        );
+    }
+
     return (
         <div className="overflow-hidden rounded-md border-2 border-primary">
-            <table className="w-full border-collapse text-right text-sm">
+            <table className="w-full border-collapse text-center text-sm">
                 <thead className="bg-primary text-primary-foreground">
                     <tr>
                         {headers.map((title) => (

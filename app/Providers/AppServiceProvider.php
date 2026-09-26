@@ -8,6 +8,8 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Eloquent\FamilyChildRepository;
 use App\Repositories\Eloquent\FamilyRepository;
 use App\Repositories\Eloquent\UserRepository;
+use App\Services\Desktop\MachineIdentity;
+use App\Services\Desktop\WindowsMachineIdentity;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(FamilyRepositoryInterface::class, FamilyRepository::class);
         $this->app->bind(FamilyChildRepositoryInterface::class, FamilyChildRepository::class);
+        $this->app->singleton(MachineIdentity::class, WindowsMachineIdentity::class);
     }
 
     /**
@@ -45,7 +48,14 @@ class AppServiceProvider extends ServiceProvider
             app()->isProduction(),
         );
 
-        Password::defaults(fn (): ?Password => app()->isProduction()
+        if (config('desktop.enabled')) {
+            config([
+                'database.connections.sqlite.busy_timeout' => 5000,
+                'database.connections.sqlite.journal_mode' => 'WAL',
+            ]);
+        }
+
+        Password::defaults(fn (): ?Password => app()->isProduction() && ! config('desktop.enabled')
             ? Password::min(12)
                 ->mixedCase()
                 ->letters()

@@ -18,9 +18,9 @@ export default function RestorePage({
 }: Props) {
     return (
         <>
-            <Head title="استرداد البيانات" />
+            <Head title="استيراد النسخ الاحتياطي" />
             <DataToolPanel
-                title="استرداد البيانات"
+                title="استيراد النسخ الاحتياطي"
                 description="يستبدل جميع العوائل والأولاد الحالية بمحتوى ملف النسخة الاحتياطية."
             >
                 <p className="text-sm">
@@ -67,7 +67,7 @@ export default function RestorePage({
                                 ) : (
                                     <Upload className="size-4" />
                                 )}
-                                استرداد البيانات
+                                استيراد النسخ الاحتياطي
                             </Button>
                         </>
                     )}

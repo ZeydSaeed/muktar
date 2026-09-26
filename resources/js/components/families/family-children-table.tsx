@@ -11,9 +11,9 @@ type Props = {
 };
 
 const emptyValue = '—';
-const cellClass = 'border-primary border px-2 py-2';
+const cellClass = 'border-primary border px-2 py-2 text-center align-middle';
 const birthCellClass =
-    'border-primary border min-w-[11rem] px-3 py-2 text-center text-[15px] whitespace-nowrap';
+    'border-primary border min-w-[11rem] px-3 py-2 text-center align-middle text-[15px] whitespace-nowrap';
 
 function deleteChild(
     familyId: number,
@@ -40,7 +40,7 @@ export function FamilyChildrenTable({
 }: Props) {
     return (
         <div className="border-primary overflow-hidden rounded-lg border-2">
-            <table className="w-full border-collapse text-sm">
+            <table className="w-full border-collapse text-center text-sm">
                 <thead className="bg-primary text-primary-foreground">
                     <tr>
                         <th className={`${cellClass} text-center font-semibold`}>

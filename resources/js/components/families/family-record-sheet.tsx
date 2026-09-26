@@ -129,7 +129,7 @@ export function FamilyRecordSheet({ record }: Props) {
                             value={head.current_subdistrict}
                         />
                         <RecordInline
-                            label="المحلة"
+                            label="اسم الحي"
                             value={head.current_neighborhood}
                         />
                         <RecordInline
